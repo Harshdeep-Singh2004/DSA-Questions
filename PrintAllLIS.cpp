@@ -26,6 +26,8 @@ public:
         vector<int> dp(n, 1);
         int len = 0;
 
+        // dp[i] - Stores the length of LIS till ith index, that must end with nums[i]
+        // That is because, LIS of the nums must ends at some index (must have some ending number that is in the nums array)
         for (int i=0; i<n; i++) {
             for (int j=0; j<i; j++) {
 
