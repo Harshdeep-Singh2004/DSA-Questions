@@ -27,13 +27,13 @@ public:
     // Preprocessing TC : O(n x logn), SC : O(n x logn) 
     TreeAncestor(ll n, vector<ll>& parent) {
  
-        dp.resize(20, vector<ll>(n, 0));
+        dp.resize(21, vector<ll>(n, 0));
         // Base Case
         fl (j,0,n-1) {
             dp[0][j] = parent[j];
         }
         // Iterative DP
-        fl (i,1,19) {
+        fl (i,1,20) {
             fl (j,0,n-1) {
                 ll F = dp[i-1][j];
                 if (F == -1) {
@@ -41,10 +41,6 @@ public:
                     continue;
                 }
                 ll S = dp[i-1][F];
-                if (S == -1) {
-                    dp[i][j] = -1;
-                    continue;
-                }
                 dp[i][j] = S;
             }
         }
@@ -55,16 +51,12 @@ public:
     ll getKthAncestor(ll node, ll k) {
  
         ll par = node;
-        ll i = 0;
-        while (k) {
-            ll bit = k&1;
-            if (bit == 1) {
-                if (par == -1) break;
-                par = dp[i][par];
-            }
-            i++;
-            k >>= 1;
+
+        fr (i,20,0) {
+            ll bit = k & (1<<i);
+            if (bit == 1 && par != -1) par = dp[i][par];
         }
+        
         return par;
  
     }
