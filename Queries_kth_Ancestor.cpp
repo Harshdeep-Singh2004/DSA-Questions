@@ -19,7 +19,21 @@ const ll inf = (ll)1e16;
 // By Harshdeep Singh
  
 // BINARY LIFTING
- 
+
+// Binary lifting : Ye method Binary or Generic Trees ke liye use kiya jaata hai jab LCA or Kth Ancestor par operations perform karne hote hai.
+// Queries di jaati hai
+
+// Binary Lifting is a technique used to efficiently answer ancestor-related queries in a tree, especially useful for problems like:
+// Finding the k-th ancestor of a node.
+// Finding Lowest Common Ancestor (LCA) of two nodes.
+
+
+// Preprocessing  TC : O(n x logn) | SC : O(n x logn)
+// Kth Ancestor TC : O(logn) | SC : O(1)
+// Overall with Queries : TC : O(n x logn) + O(q x logn) | SC : O(n x logn)
+
+// Range of n : 1<=n<=1e6 | 1<=q<=1e6
+
 class TreeAncestor {
 private:
     vector<vector<ll>> dp;
@@ -27,21 +41,17 @@ public:
     // Preprocessing TC : O(n x logn), SC : O(n x logn) 
     TreeAncestor(ll n, vector<ll>& parent) {
  
-        dp.resize(21, vector<ll>(n, 0));
+        dp.resize(32, vector<ll>(n, 0));
         // Base Case
         fl (j,0,n-1) {
             dp[0][j] = parent[j];
         }
         // Iterative DP
-        fl (i,1,20) {
+        fl (i,1,31) {
             fl (j,0,n-1) {
                 ll F = dp[i-1][j];
-                if (F == -1) {
-                    dp[i][j] = -1;
-                    continue;
-                }
-                ll S = dp[i-1][F];
-                dp[i][j] = S;
+                if (F == -1) dp[i][j] = -1;
+                else dp[i][j] = dp[i-1][F];
             }
         }
  
@@ -52,7 +62,7 @@ public:
  
         ll par = node;
 
-        fr (i,20,0) {
+        fr (i,31,0) {
             ll bit = k & (1<<i);
             if (bit == 1 && par != -1) par = dp[i][par];
         }
