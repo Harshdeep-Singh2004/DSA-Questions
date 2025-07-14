@@ -20,6 +20,7 @@ void fillLPS(vector<int> &LPS, string &pattern) {
                 len = LPS[len-1];
             } 
             else {
+                lps[i] = 0;
                 i++;
             }
         }
