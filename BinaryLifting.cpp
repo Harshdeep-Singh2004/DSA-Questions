@@ -1,69 +1,115 @@
+#include <bits/stdc++.h>
+using namespace std;
+ 
+#define ll long long
+#define ld long double
+#define ff first
+#define ss second
+#define pb push_back
+#define fl(i,s,e) for(int i=s; i<=e; i++)
+#define flg(i,s,e,g) for(int i=s; i<=e; i+=g) // gap
+#define fr(i,e,s) for(int i=e; i>=s; i--)
+#define all(x) x.begin(), x.end()
+#define lowerBit(x) (x)&(-x)
+#define parity(x) (x&1)
+const ll N = 1e5+100;
+const ll mod = 998244353;
+const ll inf = (ll)1e16;
+// Practice Better -> Become Better
+// By Harshdeep Singh
+ 
 // BINARY LIFTING
-
+ 
 class TreeAncestor {
 private:
-    // dp[i][j] - (1<<i)th ancestor of jth node
-    vector<vector<int>> dp;
-
+    vector<vector<ll>> dp;
 public:
     // Preprocessing TC : O(n x logn), SC : O(n x logn) 
-    TreeAncestor(int n, vector<int>& parent) {
-
-        dp.resize(17, vector<int>(n, 0));
-
+    TreeAncestor(ll n, vector<ll>& parent) {
+ 
+        dp.resize(20, vector<ll>(n, 0));
         // Base Case
-        for (int j=0; j<n; j++) {
+        fl (j,0,n-1) {
             dp[0][j] = parent[j];
         }
-
         // Iterative DP
-        for (int i=1; i<16; i++) {
-            for (int j=0; j<n; j++) {
-
-                int F = dp[i-1][j];
+        fl (i,1,19) {
+            fl (j,0,n-1) {
+                ll F = dp[i-1][j];
                 if (F == -1) {
                     dp[i][j] = -1;
                     continue;
                 }
-                int S = dp[i-1][F];
+                ll S = dp[i-1][F];
                 if (S == -1) {
                     dp[i][j] = -1;
                     continue;
                 }
                 dp[i][j] = S;
-
             }
         }
-
+ 
     }
     
     // Find TC - O(logn), SC - O(1)
-    int getKthAncestor(int node, int k) {
-        
-        int par = node;
-        int i = 0;
-
+    ll getKthAncestor(ll node, ll k) {
+ 
+        ll par = node;
+        ll i = 0;
         while (k) {
-            
-            int bit = k&1;
-
+            ll bit = k&1;
             if (bit == 1) {
-                par = dp[i][par];
                 if (par == -1) break;
+                par = dp[i][par];
             }
-
             i++;
             k >>= 1;
-
         }
-
         return par;
-
+ 
     }
 };
-
-/**
- * Your TreeAncestor object will be instantiated and called as such:
- * TreeAncestor* obj = new TreeAncestor(n, parent);
- * int param_1 = obj->getKthAncestor(node,k);
- */
+ 
+ 
+void solve() {
+ 
+    ll n, q;
+    cin >> n >> q;
+ 
+    vector<ll> parent(n);
+    parent[0] = -1;
+    fl (i,1,n-1) {
+        cin >> parent[i];
+        parent[i]--;
+    }
+ 
+ 
+    TreeAncestor TA(n, parent);
+ 
+    while (q--) {
+ 
+        ll x, k;
+        cin >> x >> k;
+        x--;
+ 
+        ll ans = TA.getKthAncestor(x,k);
+        cout << (ans == -1 ? ans : ans+1) << endl;  
+ 
+    }
+        
+} 
+ 
+int main() {
+    #ifndef ONLINE_JUDGE
+        freopen("input1.txt", "r", stdin);
+        freopen("output1.txt", "w", stdout);
+    #endif
+    ll t=1;
+    // cin >> t;
+    while (t--) {
+        solve();
+        // cout << endl;
+    }
+ 
+    return 0;
+}
