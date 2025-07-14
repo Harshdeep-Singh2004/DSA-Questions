@@ -63,7 +63,7 @@ public:
         ll par = node;
 
         fr (i,31,0) {
-            ll bit = k & (1<<i);
+            ll bit = (k<<i) & 1;
             if (bit == 1 && par != -1) par = dp[i][par];
         }
         
