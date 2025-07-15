@@ -23,67 +23,60 @@ private:
     vector<ll> level;
     vector<vector<ll>> dp;
 
-    void dfs(ll u, vector<ll> child[]) {
-
+    void dfs(ll u, vector<ll>& parent, vector<ll>& level, vector<ll> child[]) {
         for (auto &v: child[u]) {
             parent[v] = u;
             level[v] = level[u]+1;
-            dfs(v, child);
+            dfs(v, parent, level, child);
         }
-
     }
 
-    void fillDP(vector<ll> &parent, vector<vector<ll>> &dp) {
+    void pre_process(vector<ll> &parent, vector<vector<ll>> &dp) {
         ll n = parent.size()-1;
+        fl (j,1,n) dp[0][j] = parent[j];
 
-        fl(j,1,n) dp[0][j] = parent[j];
-
-        fl(i,1,20) {
-            fl(j,1,n) {
+        fl (i,1,31) {
+            fl (j,1,n) {
                 ll F = dp[i-1][j];
-                ll S = dp[i-1][F];
-                dp[i][j] = S;
+                dp[i][j] = dp[i-1][F];
             }
         }
-
     }
 
 public:
     BinaryLifting(ll n, vector<ll> child[]) {
         parent.resize(n+1);
         level.resize(n+1);
-        dp.resize(21, vector<ll>(n+1));
+        dp.resize(32, vector<ll> (n+1));
 
         parent[1] = 1;
         level[1] = 1;
 
-        dfs(1, child);
-        fillDP(parent, dp);
+        dfs(1, parent, level, child);
+        pre_process(parent, dp);
     }
 
     ll lca(ll u, ll v) {
+
         ll U = level[u];
         ll V = level[v];
 
-        if (U>V) return lca(v, u);
-        // u is lower in depth (upar hai)
+        if (U > V) return lca(v, u);
         ll D = V-U;
-        ll i = 0;
-        while (D) {
-            if (D&1) v = dp[i][v];
-            i++;
-            D >>= 1;
+
+        fr(i,31,0) {
+            ll bit = (D>>i)&1;
+            if (bit == 1) v = dp[i][v];
         }
+        if (u==v) return u;
 
-        if (v==u) return u;
+        fr(i,31,0) {
+            ll pu = dp[i][u];
+            ll pv = dp[i][v];
 
-        fr(i,20,0) {
-            ll up = dp[i][u];
-            ll vp = dp[i][v];
-
-            if (up != vp) {
-                v = vp;
-                u = up;
+            if (pu != pv) {
+                u = pu;
+                v = pv;
             }
         }
 
@@ -94,36 +87,32 @@ public:
 
 };
 
+
 void solve() {
 
-    ll n;
-    cin >> n;
+    ll n,q;
+    cin >> n >> q;
+
     vector<ll> child[n+1];
 
-    fl (u,1,n) {
-        ll M;
-        cin >> M;
-
-        while (M--) {
-            ll v;
-            cin >> v;
-            child[u].push_back(v);
-        }
+    fl (i,2,n) {
+        ll e;
+        cin >> e;
+        child[e].push_back(i);
     }
 
-    ll q;
-    cin >> q;
-
-    BinaryLifting bf(n, child);
+    BinaryLifting BL(n, child);
 
     while (q--) {
-        ll v,w;
-        cin >> v >> w;
 
-        cout << bf.lca(v,w) << endl;
+        ll a,b;
+        cin >> a >> b;
+
+        cout << BL.lca(a,b) << endl;
+
     }
 
-} 
+}   
  
 int main() {
     #ifndef ONLINE_JUDGE
@@ -131,9 +120,8 @@ int main() {
         freopen("output1.txt", "w", stdout);
     #endif
     ll t=1;
-    cin >> t;
+    // cin >> t;
     fl(i,1,t) {
-        cout << "Case " << i << ":" << endl;
         solve();
         // cout << endl;
     }
