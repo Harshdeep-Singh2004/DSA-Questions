@@ -56,9 +56,7 @@ Node* insert(Node* root, int key) {
         return root; // no duplicates
 
     int l = getHeight(root->left);
-    int r = getHeight(root->right);
-
-    root->height = 1 + max(l, r); 
+    int r = getHeight(root->right); 
     int balance = l - r;
 
     // LL
