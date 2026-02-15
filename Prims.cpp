@@ -40,6 +40,7 @@ class Solution {
             
             // This represent, this edge was previously added, but now while incrementally making mst, we have found some
             // unique path from u to v, so do not include this edge, it will create a cycle
+            // more simply, we have found some other vertex u from where the edge to v is cheaper than the current vertex u
             if (vis[v]) continue;
             
             vis[v]=1;
